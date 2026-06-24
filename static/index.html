@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ProductsDB</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #0a0a0f;
+        --surface: #111118;
+        --surface2: #1a1a24;
+        --border: #ffffff0f;
+        --border2: #ffffff18;
+        --text: #e8e8f0;
+        --muted: #6b6b80;
+        --accent: #7c6ff7;
+        --accent2: #a78bfa;
+        --green: #34d399;
+        --amber: #fbbf24;
+        --red: #f87171;
+        --radius: 10px;
+        --font: "Inter", sans-serif;
+        --mono: "JetBrains Mono", monospace;
+      }
+
+      html {
+        font-size: 15px;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font);
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(12px);
+      }
+
+      .header-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 24px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .logo {
+        font-family: var(--mono);
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--accent2);
+        letter-spacing: -0.02em;
+        white-space: nowrap;
+      }
+
+      .logo span {
+        color: var(--muted);
+      }
+
+      .header-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .total-badge {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        color: var(--muted);
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        padding: 3px 10px;
+        border-radius: 20px;
+      }
+
+      .total-badge strong {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      #new-banner {
+        display: none;
+        background: linear-gradient(90deg, #1a1730, #151528);
+        border-bottom: 1px solid #7c6ff740;
+        padding: 10px 24px;
+        text-align: center;
+        font-size: 0.83rem;
+        color: var(--accent2);
+        cursor: pointer;
+        transition: background 0.2s;
+        animation: slideDown 0.3s ease;
+      }
+
+      #new-banner:hover {
+        background: linear-gradient(90deg, #1f1d38, #1a1830);
+      }
+
+      #new-banner .new-count {
+        font-family: var(--mono);
+        font-weight: 500;
+        background: var(--accent);
+        color: white;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin: 0 4px;
+        font-size: 0.78rem;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 32px 24px 80px;
+      }
+
+      .controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+      }
+
+      .search-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        pointer-events: none;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        background: var(--surface);
+        border: 1px solid var(--border2);
+        color: var(--text);
+        font-family: var(--font);
+        font-size: 0.875rem;
+        padding: 9px 12px 9px 36px;
+        border-radius: var(--radius);
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      input[type="text"]:focus {
+        border-color: var(--accent);
+      }
+      input[type="text"]::placeholder {
+        color: var(--muted);
+      }
+
+      select {
+        background: var(--surface);
+        border: 1px solid var(--border2);
+        color: var(--text);
+        font-family: var(--font);
+        font-size: 0.875rem;
+        padding: 9px 32px 9px 12px;
+        border-radius: var(--radius);
+        outline: none;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6b80' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        transition: border-color 0.2s;
+      }
+
+      select:focus {
+        border-color: var(--accent);
+      }
+
+      #product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 14px;
+      }
+
+      .product-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        transition:
+          border-color 0.2s,
+          transform 0.15s;
+        animation: fadeUp 0.25s ease both;
+      }
+
+      .product-card:hover {
+        border-color: var(--border2);
+        transform: translateY(-2px);
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .card-name {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text);
+        line-height: 1.4;
+      }
+
+      .card-price {
+        font-family: var(--mono);
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--green);
+        white-space: nowrap;
+      }
+
+      .card-category {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding: 3px 9px;
+        border-radius: 6px;
+        background: var(--surface2);
+        color: var(--muted);
+        border: 1px solid var(--border);
+        cursor: pointer;
+        transition:
+          color 0.15s,
+          border-color 0.15s;
+      }
+
+      .card-category:hover {
+        color: var(--accent2);
+        border-color: var(--accent);
+      }
+
+      .card-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2px;
+      }
+
+      .card-id {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--muted);
+      }
+
+      .card-date {
+        font-size: 0.72rem;
+        color: var(--muted);
+      }
+
+      .skeleton {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .skel-line {
+        background: linear-gradient(
+          90deg,
+          var(--surface2) 25%,
+          #1f1f2e 50%,
+          var(--surface2) 75%
+        );
+        background-size: 200% 100%;
+        border-radius: 6px;
+        animation: shimmer 1.4s infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 36px;
+        flex-wrap: wrap;
+      }
+
+      .page-info {
+        font-size: 0.8rem;
+        color: var(--muted);
+        font-family: var(--mono);
+      }
+
+      button {
+        background: var(--surface);
+        border: 1px solid var(--border2);
+        color: var(--text);
+        font-family: var(--font);
+        font-size: 0.85rem;
+        padding: 8px 18px;
+        border-radius: var(--radius);
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          border-color 0.15s,
+          opacity 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      button:hover:not(:disabled) {
+        background: var(--surface2);
+        border-color: var(--accent);
+      }
+
+      button:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+
+      button.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+        font-weight: 500;
+      }
+
+      button.primary:hover:not(:disabled) {
+        background: var(--accent2);
+        border-color: var(--accent2);
+      }
+
+      .state-box {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 80px 24px;
+        color: var(--muted);
+      }
+
+      .state-box .state-icon {
+        font-size: 2.5rem;
+        margin-bottom: 12px;
+      }
+
+      .state-box p {
+        font-size: 0.9rem;
+      }
+      .state-box .state-sub {
+        font-size: 0.8rem;
+        margin-top: 6px;
+        color: #3a3a4a;
+      }
+
+      .category-pills {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+
+      .pill {
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 4px 12px;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.15s;
+        background: transparent;
+      }
+
+      .pill:hover {
+        border-color: var(--accent);
+        color: var(--accent2);
+      }
+      .pill.active {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+      }
+
+      .page-dots {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+      }
+
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--border2);
+      }
+
+      .dot.active {
+        background: var(--accent);
+      }
+
+      @media (max-width: 600px) {
+        .header-inner {
+          padding: 0 16px;
+        }
+        main {
+          padding: 20px 16px 60px;
+        }
+        #product-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">
+        <div class="logo">products<span>db</span></div>
+        <div class="header-right">
+          <div class="total-badge" id="total-badge" style="display: none">
+            <strong id="total-num">—</strong> products
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div id="new-banner" onclick="handleRefresh()">
+      <span id="new-banner-text"></span>
+      &nbsp;·&nbsp; Click to load newest
+    </div>
+
+    <main>
+      <div class="controls">
+        <div class="search-wrap">
+          <svg
+            class="search-icon"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search products…"
+            oninput="handleSearch()"
+          />
+        </div>
+        <select id="category-select" onchange="handleCategoryChange()">
+          <option value="">All categories</option>
+        </select>
+      </div>
+
+      <div class="category-pills" id="category-pills"></div>
+
+      <div id="product-grid"></div>
+
+      <div class="pagination" id="pagination" style="display: none">
+        <button id="btn-prev" onclick="goBack()" disabled>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+          Prev
+        </button>
+        <span class="page-info" id="page-info">Page 1</span>
+        <button id="btn-next" class="primary" onclick="goNext()" disabled>
+          Next
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </button>
+      </div>
+    </main>
+
+    <script>
+      const API =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1"
+          ? `${window.location.protocol}//${window.location.host}`
+          : window.API_URL || `${window.location.protocol}//${window.location.host}`;
+
+      const CATEGORIES = [
+        "Electronics",
+        "Clothing",
+        "Books",
+        "Home & Kitchen",
+        "Sports",
+        "Toys",
+        "Beauty",
+        "Automotive",
+        "Grocery",
+        "Music",
+      ];
+
+      let state = {
+        category: "",
+        search: "",
+        pageCache: [],
+        currentPageData: [],
+        currentCursor: null,
+        sessionStart: null,
+        page: 1,
+        hasMore: false,
+        totalInSession: 0,
+        polling: null,
+      };
+
+      buildCategoryPills();
+      buildCategorySelect();
+      fetchPage(null);
+      startPolling();
+
+      function buildCategoryPills() {
+        const container = document.getElementById("category-pills");
+        const allPill = makePill("All", "", true);
+        container.appendChild(allPill);
+        CATEGORIES.forEach((c) => container.appendChild(makePill(c, c, false)));
+      }
+
+      function makePill(label, value, active) {
+        const btn = document.createElement("button");
+        btn.className = "pill" + (active ? " active" : "");
+        btn.textContent = label;
+        btn.onclick = () => setCategory(value);
+        btn.dataset.value = value;
+        return btn;
+      }
+
+      function buildCategorySelect() {
+        const sel = document.getElementById("category-select");
+        CATEGORIES.forEach((c) => {
+          const opt = document.createElement("option");
+          opt.value = c;
+          opt.textContent = c;
+          sel.appendChild(opt);
+        });
+      }
+
+      async function fetchPage(cursor) {
+        showSkeleton();
+
+        const params = new URLSearchParams();
+        if (cursor) params.set("cursor", cursor);
+        if (state.category) params.set("category", state.category);
+
+        try {
+          const res = await fetch(`${API}/products?${params}`);
+          if (!res.ok) throw new Error(await res.text());
+          const data = await res.json();
+
+          state.hasMore = data.has_more;
+          state.currentCursor = data.next_cursor;
+          state.currentPageData = data.data;
+          state.totalInSession = data.total_in_session;
+
+          if (!cursor && data.next_cursor) {
+            try {
+              const decoded = atob(
+                data.next_cursor.replace(/-/g, "+").replace(/_/g, "/"),
+              );
+              state.sessionStart = decoded.split("|")[0];
+            } catch (e) {}
+          } else if (!cursor) {
+            state.sessionStart = new Date().toISOString();
+          }
+
+          if (state.pageCache.length < state.page) {
+            state.pageCache.push({
+              data: data.data,
+              total: data.total_in_session,
+              nextCursor: data.next_cursor,
+              hasMore: data.has_more,
+            });
+          } else {
+            state.pageCache[state.page - 1] = {
+              data: data.data,
+              total: data.total_in_session,
+              nextCursor: data.next_cursor,
+              hasMore: data.has_more,
+            };
+          }
+
+          renderProducts(data.data, data.total_in_session);
+          updatePagination();
+        } catch (err) {
+          showError(err.message);
+        }
+      }
+
+      function renderProducts(products, total) {
+        const grid = document.getElementById("product-grid");
+        grid.innerHTML = "";
+
+        if (total > 0) {
+          document.getElementById("total-num").textContent =
+            total.toLocaleString();
+          document.getElementById("total-badge").style.display = "flex";
+        }
+
+        const q = state.search.trim().toLowerCase();
+        const filtered = q
+          ? products.filter(
+              (p) =>
+                p.name.toLowerCase().includes(q) ||
+                p.category.toLowerCase().includes(q),
+            )
+          : products;
+
+        if (filtered.length === 0) {
+          grid.innerHTML = `
+        <div class="state-box">
+          <div class="state-icon">📦</div>
+          <p>No products found</p>
+          <p class="state-sub">Try a different category or search term</p>
+        </div>`;
+          return;
+        }
+
+        filtered.forEach((p, i) => {
+          const card = document.createElement("div");
+          card.className = "product-card";
+          card.style.animationDelay = `${i * 18}ms`;
+          card.innerHTML = `
+        <div class="card-top">
+          <div class="card-name">${escHtml(p.name)}</div>
+          <div class="card-price">₹${parseFloat(p.price).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</div>
+        </div>
+        <div>
+          <span class="card-category" onclick="setCategory('${escHtml(p.category)}')">${escHtml(p.category)}</span>
+        </div>
+        <div class="card-meta">
+          <span class="card-id">#${p.id}</span>
+          <span class="card-date">${formatDate(p.created_at)}</span>
+        </div>`;
+          grid.appendChild(card);
+        });
+      }
+
+      function showSkeleton() {
+        const grid = document.getElementById("product-grid");
+        grid.innerHTML = "";
+        for (let i = 0; i < 12; i++) {
+          grid.innerHTML += `
+        <div class="skeleton">
+          <div class="card-top">
+            <div class="skel-line" style="height:14px;width:65%"></div>
+            <div class="skel-line" style="height:14px;width:18%"></div>
+          </div>
+          <div class="skel-line" style="height:22px;width:30%"></div>
+          <div class="card-meta">
+            <div class="skel-line" style="height:11px;width:20%"></div>
+            <div class="skel-line" style="height:11px;width:25%"></div>
+          </div>
+        </div>`;
+        }
+      }
+
+      function showError(msg) {
+        document.getElementById("product-grid").innerHTML = `
+      <div class="state-box">
+        <div class="state-icon">⚠️</div>
+        <p>Could not load products</p>
+        <p class="state-sub">${escHtml(msg)}</p>
+      </div>`;
+      }
+
+      function updatePagination() {
+        const pag = document.getElementById("pagination");
+        const btnPrev = document.getElementById("btn-prev");
+        const btnNext = document.getElementById("btn-next");
+        const info = document.getElementById("page-info");
+
+        pag.style.display = "flex";
+        btnPrev.disabled = state.page <= 1;
+        btnNext.disabled = !state.hasMore;
+        info.textContent = `Page ${state.page}`;
+      }
+
+      function goNext() {
+        if (!state.hasMore) return;
+        state.page++;
+        fetchPage(state.currentCursor);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function goBack() {
+        if (state.page <= 1) return;
+        state.page--;
+
+        const cached = state.pageCache[state.page - 1];
+        if (cached) {
+          state.hasMore = cached.hasMore;
+          state.currentCursor = cached.nextCursor;
+          state.currentPageData = cached.data;
+          state.totalInSession = cached.total;
+          renderProducts(cached.data, cached.total);
+          updatePagination();
+        } else {
+          fetchPage(null);
+        }
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function setCategory(val) {
+        state.category = val;
+        state.pageCache = [];
+        state.page = 1;
+        state.sessionStart = null;
+        hideBanner();
+
+        document.getElementById("category-select").value = val;
+
+        document.querySelectorAll(".pill").forEach((p) => {
+          p.classList.toggle("active", p.dataset.value === val);
+        });
+
+        fetchPage(null);
+      }
+
+      function handleCategoryChange() {
+        setCategory(document.getElementById("category-select").value);
+      }
+
+      let searchTimer;
+      function handleSearch() {
+        state.search = document.getElementById("search-input").value;
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => {
+          renderProducts(state.currentPageData, state.totalInSession);
+        }, 200);
+      }
+
+      function startPolling() {
+        if (state.polling) clearInterval(state.polling);
+        state.polling = setInterval(pollNewCount, 15000);
+      }
+
+      async function pollNewCount() {
+        if (!state.sessionStart) return;
+
+        try {
+          const params = new URLSearchParams({ since: state.sessionStart });
+          if (state.category) params.set("category", state.category);
+          const res = await fetch(`${API}/products/new-count?${params}`);
+          const data = await res.json();
+
+          if (data.count > 0) {
+            showBanner(data.count);
+          }
+        } catch (e) {}
+      }
+
+      function showBanner(count) {
+        const banner = document.getElementById("new-banner");
+        const text = document.getElementById("new-banner-text");
+        text.innerHTML = `<span class="new-count">${count}</span> new product${count === 1 ? "" : "s"} added`;
+        banner.style.display = "block";
+      }
+
+      function hideBanner() {
+        document.getElementById("new-banner").style.display = "none";
+      }
+
+      function handleRefresh() {
+        hideBanner();
+        state.pageCache = [];
+        state.page = 1;
+        state.sessionStart = null;
+        fetchPage(null);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function escHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function formatDate(iso) {
+        const d = new Date(iso);
+        return d.toLocaleDateString("en-IN", {
+          day: "numeric",
+          month: "short",
+          year: "2-digit",
+        });
+      }
+    </script>
+  </body>
+</html>
